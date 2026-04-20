@@ -1,14 +1,3 @@
-import express from "express";
-
-const app = express();
-app.use(express.json());
-
-// ===== CONFIG =====
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const DIGI_USERNAME = process.env.DIGI_USERNAME;
-const DIGI_API_KEY = process.env.DIGI_API_KEY;
-
-// ===== ROUTE =====
 app.post("/chat", async (req, res) => {
   try {
     const message = req.body.message || "";
@@ -21,33 +10,28 @@ app.post("/chat", async (req, res) => {
       const nominal = match[2];
 
       return res.json({
-        reply: `📄 ORDER\nNo: ${nomor}\nNominal: ${nominal}\n\n💳 Sila bayar dahulu.\nTaip DONE selepas bayar`
+        replies: [
+          `📄 ORDER\nNo: ${nomor}\nNominal: ${nominal}\n\nSila buat pembayaran`
+        ]
       });
     }
 
     // ===== 2. CONFIRM PAYMENT =====
     if (message.toLowerCase() === "done") {
       return res.json({
-        reply: "⏳ Pesanan sedang diproses..."
+        replies: ["⏳ Pesanan sedang diproses..."]
       });
     }
 
-    // ===== 3. DEFAULT REPLY =====
+    // ===== 3. DEFAULT =====
     return res.json({
-      reply: "Bot aktif 🤖"
+      replies: ["Bot aktif 🤖"]
     });
 
   } catch (err) {
     console.error(err);
-    res.json({ reply: "❌ Server error" });
+    res.json({
+      replies: ["❌ Server error"]
+    });
   }
 });
-
-// ===== ROOT =====
-app.get("/", (req, res) => {
-  res.send("Bot jalan ✅");
-});
-
-// ===== START =====
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server jalan di port " + PORT));
