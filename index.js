@@ -2,9 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 
 const app = express();
-app.use(bodyParser.json());
-
-app.post("/webhook", async (req, res) => {
+app.post("/chat", async (req, res) => {
   const message = req.body.message?.toLowerCase() || "";
 
   let reply = "Format salah.\nContoh: 08123456789 10";
